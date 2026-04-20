@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ORBIS – Tanıtım Sunumu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: #030a18;
+            color: #e8f4ff;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Slides ───────────────────────────────────────────── */
+        .slides-wrapper { position: fixed; inset: 0; }
+
+        .slide {
+            position: absolute; inset: 0;
+            display: none;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .slide-canvas {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        /* ── Slide content ───────────────────────────────────── */
+        .slide-content {
+            position: relative; z-index: 10;
+            padding: 60px 80px;
+            max-width: 52%;
+        }
+        .slide-content--center {
+            max-width: 700px;
+            text-align: center;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .slide-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #00c8e0;
+            margin-bottom: 20px;
+        }
+        .slide-title {
+            font-size: clamp(30px, 3.8vw, 54px);
+            font-weight: 800;
+            line-height: 1.1;
+            color: #ffffff;
+            margin-bottom: 24px;
+        }
+        .slide-title em { font-style: normal; color: #00c8e0; }
+
+        .slide-body {
+            font-size: clamp(14px, 1.4vw, 17px);
+            font-weight: 300;
+            line-height: 1.75;
+            color: rgba(232, 244, 255, 0.72);
+            max-width: 520px;
+        }
+        .slide-content--center .slide-body { max-width: none; }
+
+        .slide-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 32px;
+        }
+        .slide-content--center .slide-tags { justify-content: center; }
+
+        .slide-tag {
+            padding: 6px 16px;
+            border: 1px solid rgba(0, 200, 224, 0.35);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #00c8e0;
+        }
+
+        /* ── Top bar ──────────────────────────────────────────── */
+        .pres-navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 22px 44px;
+            display: flex; align-items: center; justify-content: space-between;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(3,10,24,0.85), transparent);
+        }
+        .pres-logo {
+            font-size: 18px; font-weight: 800; letter-spacing: 4px;
+            color: #ffffff; text-decoration: none;
+        }
+        .pres-logo span { color: #00c8e0; }
+        .slide-num-label {
+            font-size: 12px; font-weight: 500;
+            color: rgba(255,255,255,0.38);
+            letter-spacing: 1px;
+        }
+
+        /* ── Bottom nav ───────────────────────────────────────── */
+        .nav {
+            position: fixed; bottom: 36px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; align-items: center; gap: 18px;
+            z-index: 100;
+        }
+        .nav-btn {
+            background: rgba(0, 200, 224, 0.08);
+            border: 1px solid rgba(0, 200, 224, 0.28);
+            color: #00c8e0;
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 15px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+            user-select: none;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(0, 200, 224, 0.18);
+            border-color: #00c8e0;
+        }
+        .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+        .nav-counter {
+            font-size: 13px; font-weight: 500;
+            color: rgba(232, 244, 255, 0.45);
+            min-width: 52px; text-align: center;
+        }
+
+        /* ── Progress dots ───────────────────────────────────── */
+        .progress {
+            position: fixed; right: 28px; top: 50%;
+            transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 9px;
+            z-index: 100;
+        }
+        .progress-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .progress-dot.active {
+            background: #00c8e0;
+            transform: scale(1.6);
+        }
+
+        /* ── Responsive ──────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .slide-content { max-width: 100%; padding: 80px 28px 120px; }
+            .nav { bottom: 24px; }
+            .progress { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<nav class="pres-navbar">
+    <a href="index.html" class="pres-logo">ORBIS<span>.</span></a>
+    <span class="slide-num-label" id="slide-num">01 / 09</span>
+</nav>
+
+<!-- ── Slides ── -->
+<div class="slides-wrapper" id="slides-wrapper">
+
+    <!-- SLIDE 1: Giriş -->
+    <div class="slide active" data-slide="0">
+        <canvas id="intro-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content slide-content--center">
+            <p class="slide-label">Klinik Kullanım Düzeni</p>
+            <h1 class="slide-title">ORBIS<br><em>Tanıtım Sunumu</em></h1>
+            <p class="slide-body">Klinik iş akışı, hasta yönetimi ve operasyon koordinasyonu için tasarlanmış modüler dijital platform.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: ORBIS Nedir -->
+    <div class="slide" data-slide="1">
+        <canvas id="about-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content">
+            <p class="slide-label">Platform</p>
+            <h2 class="slide-title">ORBIS <em>Nedir?</em></h2>
+            <p class="slide-body">ORBIS, sağlık kurumlarının iç operasyon düzenini ve hasta akışını yönetmek için tasarlanmış modüler bir yazılım platformudur.<br><br>Her bölüm bağımsız çalışır; tüm sistem entegre bir düzen sunar.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">Modüler Mimari</span>
+                <span class="slide-tag">Gerçek Zamanlı</span>
+                <span class="slide-tag">Yerel Veri</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: Hasta Kabul -->
+    <div class="slide" data-slide="2">
+        <canvas id="hk-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content">
+            <p class="slide-label">Modül 01</p>
+            <h2 class="slide-title">Hasta <em>Kabul</em></h2>
+            <p class="slide-body">Hasta kayıt, randevu ve kabul süreçlerini tek ekrandan yönetin. Yoğun poliklinik trafiğinde sıra yönetimini ve yönlendirmeyi optimize edin.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">Sıra Yönetimi</span>
+                <span class="slide-tag">Randevu</span>
+                <span class="slide-tag">Kayıt</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: Klinik Gözlem -->
+    <div class="slide" data-slide="3">
+        <canvas id="kg-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content">
+            <p class="slide-label">Modül 02</p>
+            <h2 class="slide-title">Klinik <em>Gözlem</em></h2>
+            <p class="slide-body">Hasta muayene notları, vital bulgular ve klinik gözlem kayıtlarını yapılandırılmış formlarla yönetin. Geçmiş veriye anında erişin.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">Vital Bulgular</span>
+                <span class="slide-tag">Muayene Notları</span>
+                <span class="slide-tag">Geçmiş Kayıt</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: Ameliyathane (BONE – PARÇA 4/4) -->
+    <div class="slide" data-slide="4">
+        <canvas id="bone-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content">
+            <p class="slide-label">Modül 03</p>
+            <h2 class="slide-title">Ameliyat<em>hane</em></h2>
+            <p class="slide-body">Cerrahi program planlaması, operasyon odası takibi ve ameliyathane ekibi koordinasyonunu merkezi bir panel üzerinden yönetin.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">Cerrahi Program</span>
+                <span class="slide-tag">Ekip Koordinasyonu</span>
+                <span class="slide-tag">Oda Takibi</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: Veri Merkezi -->
+    <div class="slide" data-slide="5">
+        <canvas id="vm-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content">
+            <p class="slide-label">Modül 04</p>
+            <h2 class="slide-title">Veri <em>Merkezi</em></h2>
+            <p class="slide-body">Hasta verileri, raporlar ve analitik içerikler güvenli ve yapılandırılmış bir veri katmanında saklanır. İzin yönetimi ve denetim izi dahildir.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">Güvenli Depolama</span>
+                <span class="slide-tag">Analitik</span>
+                <span class="slide-tag">Denetim İzi</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: Arşiv -->
+    <div class="slide" data-slide="6">
+        <canvas id="ar-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content">
+            <p class="slide-label">Modül 05</p>
+            <h2 class="slide-title"><em>Arşiv</em></h2>
+            <p class="slide-body">Dijital hasta dosyaları, geçmiş kayıtlar ve belgeler yapılandırılmış arşiv sistemiyle korunur. Hızlı arama ve filtreleme desteklenir.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">Dijital Dosya</span>
+                <span class="slide-tag">Hızlı Arama</span>
+                <span class="slide-tag">Uzun Süreli Saklama</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: Kontrollü Erişim (SHIELD – PARÇA 4/4) -->
+    <div class="slide" data-slide="7">
+        <canvas id="shield-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content">
+            <p class="slide-label">Modül 06</p>
+            <h2 class="slide-title">Kontrollü <em>Erişim</em></h2>
+            <p class="slide-body">Rol tabanlı yetkilendirme ve kimlik doğrulama katmanı ile her kullanıcı yalnızca kendi alanına erişir. Güvenlik ve şeffaflık bir arada.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">Rol Tabanlı Erişim</span>
+                <span class="slide-tag">Kimlik Doğrulama</span>
+                <span class="slide-tag">Denetim</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 9: Kapanış -->
+    <div class="slide" data-slide="8">
+        <canvas id="outro-canvas" class="slide-canvas"></canvas>
+        <div class="slide-content slide-content--center">
+            <p class="slide-label">İletişim</p>
+            <h2 class="slide-title"><em>ORBIS</em> ile Tanışın</h2>
+            <p class="slide-body">Kurumunuz için özelleştirilmiş bir demo ve detaylı bilgi için bizimle iletişime geçin.</p>
+            <div class="slide-tags">
+                <span class="slide-tag">yilmazkara@msn.com</span>
+                <span class="slide-tag">0533 468 84 07</span>
+                <span class="slide-tag">Pursaklar / Ankara</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Progress dots -->
+<div class="progress" id="progress"></div>
+
+<!-- Navigation -->
+<div class="nav">
+    <button class="nav-btn" id="prev-btn" onclick="navigate(-1)" aria-label="Önceki slayt">&#8592;</button>
+    <span class="nav-counter" id="nav-counter">1 / 9</span>
+    <button class="nav-btn" id="next-btn" onclick="navigate(1)" aria-label="Sonraki slayt">&#8594;</button>
+    <button class="nav-btn" id="pause-btn" onclick="togglePause()" aria-label="Duraklat / Devam" title="Duraklat (Boşluk)">&#9646;&#9646;</button>
+</div>
+
+<script>
+    // ── Helpers ────────────────────────────────────────────────
+    const getEl = id => document.getElementById(id);
+    function fitCanvas(canvas, ctx) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    // ── Slide state ────────────────────────────────────────────
+    const TOTAL = 9;
+    let currentSlide = 0;
+    let isPaused = false;
+
+    function navigate(dir) {
+        const next = currentSlide + dir;
+        if (next < 0 || next >= TOTAL) return;
+        goToSlide(next);
+    }
+
+    function goToSlide(index) {
+        document.querySelectorAll('.slide').forEach((s, i) => {
+            s.classList.toggle('active', i === index);
+        });
+        document.querySelectorAll('.progress-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === index);
+        });
+        currentSlide = index;
+        getEl('nav-counter').textContent = `${index + 1} / ${TOTAL}`;
+        getEl('slide-num').textContent =
+            String(index + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+        getEl('prev-btn').disabled = index === 0;
+        getEl('next-btn').disabled = index === TOTAL - 1;
+    }
+
+    function togglePause() {
+        isPaused = !isPaused;
+        const btn = getEl('pause-btn');
+        btn.innerHTML = isPaused ? '&#9654;' : '&#9646;&#9646;';
+        btn.setAttribute('aria-label', isPaused ? 'Devam et' : 'Duraklat');
+        btn.setAttribute('aria-pressed', String(isPaused));
+    }
+
+    // Build progress dots
+    const progressEl = getEl('progress');
+    for (let i = 0; i < TOTAL; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goToSlide(i));
+        progressEl.appendChild(dot);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+        if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+        if (e.key === ' ') { e.preventDefault(); togglePause(); }
+    });
+
+    // Resize
+    window.addEventListener('resize', () => {
+        initIntro(); initAbout(); initHK(); initKG();
+        initBone(); initVM(); initAR(); initShield(); initOutro();
+    });
+
+    // ── SLIDE 1: Giriş – orbital rings ─────────────────────────
+    const iCanvas = getEl('intro-canvas');
+    const iCtx = iCanvas.getContext('2d');
+    let introAngle = 0;
+    function initIntro() { fitCanvas(iCanvas, iCtx); }
+    function drawIntro() {
+        if (isPaused) { requestAnimationFrame(drawIntro); return; }
+        iCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        const cx = window.innerWidth * 0.5; const cy = window.innerHeight * 0.5;
+        introAngle += 0.005;
+        iCtx.save(); iCtx.translate(cx, cy);
+
+        // Static rings
+        for (let r = 0; r < 5; r++) {
+            const radius = 80 + r * 65;
+            iCtx.beginPath();
+            iCtx.arc(0, 0, radius, 0, Math.PI * 2);
+            iCtx.strokeStyle = `rgba(0, 200, 224, ${0.04 + r * 0.015})`;
+            iCtx.lineWidth = 1;
+            iCtx.stroke();
+        }
+
+        // Orbiting dots with trails
+        for (let i = 0; i < 3; i++) {
+            const orbitR = 160 + i * 80;
+            const speed = 1 + i * 0.5;
+            const a = introAngle * speed + (i * Math.PI * 2 / 3);
+            for (let t = 0; t < 14; t++) {
+                const ta = a - t * 0.07;
+                const tx = Math.cos(ta) * orbitR; const ty = Math.sin(ta) * orbitR;
+                iCtx.beginPath();
+                iCtx.arc(tx, ty, Math.max(0.2, 2 - t * 0.13), 0, Math.PI * 2);
+                iCtx.fillStyle = `rgba(0, 200, 224, ${0.45 - t * 0.03})`;
+                iCtx.fill();
+            }
+            iCtx.beginPath();
+            iCtx.arc(Math.cos(a) * orbitR, Math.sin(a) * orbitR, 4, 0, Math.PI * 2);
+            iCtx.fillStyle = '#00c8e0'; iCtx.fill();
+        }
+
+        // Centre glow
+        const grad = iCtx.createRadialGradient(0, 0, 0, 0, 0, 70);
+        grad.addColorStop(0, 'rgba(0, 200, 224, 0.12)');
+        grad.addColorStop(1, 'rgba(0, 200, 224, 0)');
+        iCtx.beginPath(); iCtx.arc(0, 0, 70, 0, Math.PI * 2);
+        iCtx.fillStyle = grad; iCtx.fill();
+
+        iCtx.restore();
+        requestAnimationFrame(drawIntro);
+    }
+
+    // ── SLIDE 2: ORBIS Nedir – moving network ──────────────────
+    const aCanvas = getEl('about-canvas');
+    const aCtx = aCanvas.getContext('2d');
+    let aboutNodes = [];
+    function initAbout() {
+        fitCanvas(aCanvas, aCtx);
+        aboutNodes = [];
+        for (let i = 0; i < 32; i++) {
+            aboutNodes.push({
+                x: (Math.random() - 0.5) * 620,
+                y: (Math.random() - 0.5) * 380,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                r: 2 + Math.random() * 2.5
+            });
+        }
+    }
+    function drawAbout() {
+        if (isPaused) { requestAnimationFrame(drawAbout); return; }
+        aCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        const cx = window.innerWidth * 0.75; const cy = window.innerHeight * 0.5;
+        aCtx.save(); aCtx.translate(cx, cy);
+
+        for (let n of aboutNodes) {
+            n.x += n.vx; n.y += n.vy;
+            if (Math.abs(n.x) > 310) n.vx *= -1;
+            if (Math.abs(n.y) > 190) n.vy *= -1;
+        }
+        for (let i = 0; i < aboutNodes.length; i++) {
+            for (let j = i + 1; j < aboutNodes.length; j++) {
+                const dx = aboutNodes[i].x - aboutNodes[j].x;
+                const dy = aboutNodes[i].y - aboutNodes[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 110) {
+                    aCtx.beginPath();
+                    aCtx.moveTo(aboutNodes[i].x, aboutNodes[i].y);
+                    aCtx.lineTo(aboutNodes[j].x, aboutNodes[j].y);
+                    aCtx.strokeStyle = `rgba(0, 200, 224, ${(1 - dist / 110) * 0.28})`;
+                    aCtx.lineWidth = 1; aCtx.stroke();
+                }
+            }
+        }
+        for (let n of aboutNodes) {
+            aCtx.beginPath(); aCtx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            aCtx.fillStyle = 'rgba(0, 200, 224, 0.65)'; aCtx.fill();
+        }
+
+        aCtx.restore();
+        requestAnimationFrame(drawAbout);
+    }
+
+    // ── SLIDE 3: Hasta Kabul – flow queue ──────────────────────
+    const hkCanvas = getEl('hk-canvas');
+    const hkCtx = hkCanvas.getContext('2d');
+    let hkParticles = []; let hkTime = 0;
+    function initHK() {
+        fitCanvas(hkCanvas, hkCtx);
+        hkParticles = [];
+        for (let i = 0; i < 22; i++) {
+            hkParticles.push({
+                x: -280 + i * 26,
+                baseY: (Math.random() - 0.5) * 40,
+                vx: 0.4 + Math.random() * 0.5,
+                r: 3 + Math.random() * 3,
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+    }
+    function drawHK() {
+        if (isPaused) { requestAnimationFrame(drawHK); return; }
+        hkCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        hkTime += 0.018;
+        const cx = window.innerWidth * 0.75; const cy = window.innerHeight * 0.5;
+        hkCtx.save(); hkCtx.translate(cx, cy);
+
+        // Flow spine
+        hkCtx.beginPath();
+        for (let x = -300; x <= 300; x += 4) {
+            const y = Math.sin(x * 0.012 + hkTime) * 28;
+            if (x === -300) hkCtx.moveTo(x, y); else hkCtx.lineTo(x, y);
+        }
+        hkCtx.strokeStyle = 'rgba(0, 200, 224, 0.08)'; hkCtx.lineWidth = 2; hkCtx.stroke();
+
+        // Particles
+        for (let p of hkParticles) {
+            p.x += p.vx;
+            if (p.x > 310) p.x = -310;
+            const y = Math.sin(p.x * 0.012 + hkTime) * 28 + p.baseY;
+            hkCtx.beginPath(); hkCtx.arc(p.x, y, p.r, 0, Math.PI * 2);
+            hkCtx.fillStyle = 'rgba(0, 200, 224, 0.7)'; hkCtx.fill();
+        }
+
+        // Queue column on right
+        for (let i = 0; i < 5; i++) {
+            const qy = (i - 2) * 54;
+            const alpha = 0.15 + (5 - i) * 0.09;
+            hkCtx.beginPath();
+            hkCtx.roundRect(-52, qy - 16, 104, 32, 4);
+            hkCtx.strokeStyle = `rgba(0, 200, 224, ${alpha})`; hkCtx.lineWidth = 1; hkCtx.stroke();
+            hkCtx.fillStyle = `rgba(0, 200, 224, ${alpha * 0.4})`; hkCtx.fill();
+        }
+
+        hkCtx.restore();
+        requestAnimationFrame(drawHK);
+    }
+
+    // ── SLIDE 4: Klinik Gözlem – EKG waveform ──────────────────
+    const kgCanvas = getEl('kg-canvas');
+    const kgCtx = kgCanvas.getContext('2d');
+    let kgTime = 0;
+    function initKG() { fitCanvas(kgCanvas, kgCtx); }
+    function drawKG() {
+        if (isPaused) { requestAnimationFrame(drawKG); return; }
+        kgCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        kgTime += 0.018;
+        const cx = window.innerWidth * 0.75; const cy = window.innerHeight * 0.5;
+        kgCtx.save(); kgCtx.translate(cx, cy);
+
+        const w = 480;
+        kgCtx.beginPath();
+        kgCtx.moveTo(-w / 2, 0);
+        for (let x = -w / 2; x <= w / 2; x += 2) {
+            const t = (x + w / 2) / w + kgTime;
+            let y = 0;
+            const pulse = t % 1;
+            if      (pulse > 0.30 && pulse < 0.35) y = -18;
+            else if (pulse > 0.35 && pulse < 0.40) y =  75;
+            else if (pulse > 0.40 && pulse < 0.42) y = -28;
+            else if (pulse > 0.42 && pulse < 0.50) y =  8;
+            else y = Math.sin(t * 3.5) * 4;
+            kgCtx.lineTo(x, y);
+        }
+        kgCtx.strokeStyle = '#00c8e0'; kgCtx.lineWidth = 2; kgCtx.stroke();
+
+        // Scan line
+        const scanX = ((kgTime * 120) % (w + 40)) - w / 2 - 20;
+        const grad = kgCtx.createLinearGradient(scanX - 40, 0, scanX, 0);
+        grad.addColorStop(0, 'rgba(0, 200, 224, 0)');
+        grad.addColorStop(1, 'rgba(0, 200, 224, 0.25)');
+        kgCtx.fillStyle = grad;
+        kgCtx.fillRect(scanX - 40, -80, 40, 160);
+
+        // Vital labels
+        const vitals = [['BPM', '72'], ['SpO₂', '98%'], ['Temp', '36.7°']];
+        vitals.forEach(([label, val], i) => {
+            const lx = -w / 2 + i * 168;
+            kgCtx.fillStyle = 'rgba(0, 200, 224, 0.45)';
+            kgCtx.font = '400 11px Inter'; kgCtx.textAlign = 'left';
+            kgCtx.fillText(label, lx, 70);
+            kgCtx.fillStyle = '#ffffff';
+            kgCtx.font = '700 20px Inter';
+            kgCtx.fillText(val, lx, 92);
+        });
+
+        kgCtx.restore();
+        requestAnimationFrame(drawKG);
+    }
+
+    // ── SLIDE 5: Ameliyathane – 3D bone model (PARÇA 4/4) ──────
+        const bCanvas = getEl('bone-canvas');
+        const bCtx = bCanvas.getContext('2d');
+        let bonePoints = []; let boneAngle = 0;
+        function initBone() {
+            fitCanvas(bCanvas, bCtx);
+            bonePoints = [];
+            for(let y = -150; y <= 150; y += 15) {
+                let w = 25;
+                if (y < -80) w = 25 + Math.pow(Math.abs(y + 80), 1.2) * 0.4;
+                if (y > 80) w = 25 + Math.pow(y - 80, 1.2) * 0.4;
+                for(let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+                    let r = w;
+                    if (y > 80) r = w * (0.7 + 0.4 * Math.abs(Math.cos(a)));
+                    if (y < -80) r = w * (0.8 + 0.3 * Math.abs(Math.sin(a)));
+                    bonePoints.push({x: Math.cos(a)*r, y: y, z: Math.sin(a)*r, layer: y});
+                }
+            }
+        }
+        function drawBone() {
+            if (isPaused) { requestAnimationFrame(drawBone); return; }
+            bCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            boneAngle += 0.02;
+            const cx = window.innerWidth * 0.75; const cy = window.innerHeight * 0.5;
+            const floatY = cy + Math.sin(boneAngle) * 20;
+
+            bCtx.strokeStyle = 'rgba(0, 240, 255, 0.5)'; bCtx.fillStyle = '#00f0ff'; bCtx.lineWidth = 1;
+
+            let projected = [];
+            for(let p of bonePoints) {
+                const rotX = p.x * Math.cos(boneAngle) - p.z * Math.sin(boneAngle);
+                const rotZ = p.x * Math.sin(boneAngle) + p.z * Math.cos(boneAngle);
+                const fov = 420;
+                const scale = fov / (fov + rotZ + 120);
+                projected.push({
+                    sx: cx + rotX * scale,
+                    sy: floatY + p.y * scale,
+                    z: rotZ,
+                    scale: scale
+                });
+            }
+            projected.sort((a, b) => a.z - b.z);
+            for(let p of projected) {
+                const alpha = Math.max(0.1, Math.min(0.9, 0.3 + (p.z + 120) / 240 * 0.65));
+                bCtx.beginPath();
+                bCtx.arc(p.sx, p.sy, Math.max(0.5, p.scale * 2.5), 0, Math.PI * 2);
+                bCtx.fillStyle = `rgba(0, 240, 255, ${alpha})`;
+                bCtx.fill();
+            }
+
+            bCtx.fillStyle = '#ffffff'; bCtx.font = '700 18px Inter';
+            bCtx.textAlign = 'center'; bCtx.textBaseline = 'middle';
+            bCtx.fillText('CERRAHİ GÖRÜNTÜLEME', cx, floatY + 185);
+
+            requestAnimationFrame(drawBone);
+        }
+
+    // ── SLIDE 6: Veri Merkezi – data grid ──────────────────────
+    const vmCanvas = getEl('vm-canvas');
+    const vmCtx = vmCanvas.getContext('2d');
+    let vmTime = 0;
+    function initVM() { fitCanvas(vmCanvas, vmCtx); }
+    function drawVM() {
+        if (isPaused) { requestAnimationFrame(drawVM); return; }
+        vmCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        vmTime += 0.012;
+        const cx = window.innerWidth * 0.75; const cy = window.innerHeight * 0.5;
+        vmCtx.save(); vmCtx.translate(cx, cy);
+
+        const cols = 8; const rows = 6; const cw = 52; const ch = 32;
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const x = (c - cols / 2) * cw + cw / 2;
+                const y = (r - rows / 2) * ch + ch / 2;
+                const pulse = Math.sin(vmTime + r * 0.55 + c * 0.35) * 0.5 + 0.5;
+                vmCtx.fillStyle = `rgba(0, 200, 224, ${0.03 + pulse * 0.08})`;
+                vmCtx.fillRect(x - cw / 2 + 2, y - ch / 2 + 2, cw - 4, ch - 4);
+                vmCtx.strokeStyle = `rgba(0, 200, 224, ${0.08 + pulse * 0.22})`;
+                vmCtx.lineWidth = 1;
+                vmCtx.strokeRect(x - cw / 2 + 2, y - ch / 2 + 2, cw - 4, ch - 4);
+            }
+        }
+
+        // Moving data particles
+        for (let i = 0; i < 6; i++) {
+            const t = (vmTime * 0.45 + i * 0.17) % 1;
+            const x = -cols / 2 * cw + t * cols * cw;
+            const row = i % rows;
+            const y = (row - rows / 2) * ch + ch / 2;
+            vmCtx.beginPath(); vmCtx.arc(x, y, 3, 0, Math.PI * 2);
+            vmCtx.fillStyle = '#00c8e0'; vmCtx.fill();
+        }
+
+        vmCtx.restore();
+        requestAnimationFrame(drawVM);
+    }
+
+    // ── SLIDE 7: Arşiv – floating document icons ────────────────
+    const arCanvas = getEl('ar-canvas');
+    const arCtx = arCanvas.getContext('2d');
+    let arTime = 0;
+    function initAR() { fitCanvas(arCanvas, arCtx); }
+    function drawAR() {
+        if (isPaused) { requestAnimationFrame(drawAR); return; }
+        arCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        arTime += 0.01;
+        const cx = window.innerWidth * 0.75; const cy = window.innerHeight * 0.5;
+        arCtx.save(); arCtx.translate(cx, cy);
+
+        for (let i = 0; i < 12; i++) {
+            const col = i % 4; const row = Math.floor(i / 4);
+            const x = (col - 1.5) * 82;
+            const y = (row - 1) * 104 + Math.sin(arTime + i * 0.5) * 5;
+            const alpha = 0.18 + (Math.sin(arTime + i * 0.3) * 0.5 + 0.5) * 0.38;
+
+            // Document silhouette
+            arCtx.fillStyle = `rgba(0, 200, 224, ${alpha * 0.28})`;
+            arCtx.strokeStyle = `rgba(0, 200, 224, ${alpha})`;
+            arCtx.lineWidth = 1;
+            arCtx.beginPath();
+            arCtx.moveTo(x - 20, y - 28); arCtx.lineTo(x + 12, y - 28);
+            arCtx.lineTo(x + 20, y - 20); arCtx.lineTo(x + 20, y + 28);
+            arCtx.lineTo(x - 20, y + 28); arCtx.closePath();
+            arCtx.fill(); arCtx.stroke();
+
+            // Corner fold
+            arCtx.beginPath();
+            arCtx.moveTo(x + 12, y - 28); arCtx.lineTo(x + 12, y - 20); arCtx.lineTo(x + 20, y - 20);
+            arCtx.strokeStyle = `rgba(0, 200, 224, ${alpha})`; arCtx.stroke();
+
+            // Text lines
+            for (let l = 0; l < 3; l++) {
+                arCtx.beginPath();
+                arCtx.moveTo(x - 12, y - 10 + l * 10); arCtx.lineTo(x + 12, y - 10 + l * 10);
+                arCtx.strokeStyle = `rgba(0, 200, 224, ${alpha * 0.45})`; arCtx.stroke();
+            }
+        }
+
+        arCtx.restore();
+        requestAnimationFrame(drawAR);
+    }
+
+    // ── SLIDE 8: Kontrollü Erişim – hexagonal shield (PARÇA 4/4)
+        const slCanvas = getEl('shield-canvas');
+        const slCtx = slCanvas.getContext('2d');
+        let shieldAngle = 0;
+        function initShield() { fitCanvas(slCanvas, slCtx); }
+        function drawHexagon(x, y, radius, angle, color, lineWidth) {
+            slCtx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const a = angle + (Math.PI / 3) * i;
+                const hx = x + Math.cos(a) * radius; const hy = y + Math.sin(a) * radius;
+                if (i === 0) slCtx.moveTo(hx, hy); else slCtx.lineTo(hx, hy);
+            }
+            slCtx.closePath(); slCtx.strokeStyle = color; slCtx.lineWidth = lineWidth; slCtx.stroke();
+        }
+        function drawShield() {
+            if (isPaused) { requestAnimationFrame(drawShield); return; }
+            slCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            const cx = window.innerWidth * 0.5; const cy = window.innerHeight * 0.5;
+            shieldAngle += 0.01; let pulse = 1 + Math.sin(shieldAngle * 5) * 0.1;
+            slCtx.save(); slCtx.translate(cx, cy);
+
+            drawHexagon(0, 0, 150 * pulse, shieldAngle, 'rgba(0, 240, 255, 0.4)', 2);
+            drawHexagon(0, 0, 120, -shieldAngle * 2, 'rgba(0, 255, 136, 0.6)', 4);
+            drawHexagon(0, 0, 80 * pulse, shieldAngle * 3, 'rgba(0, 240, 255, 0.8)', 1);
+
+            for(let i=0; i<6; i++) {
+                const a = shieldAngle + (Math.PI / 3) * i;
+                slCtx.beginPath(); slCtx.moveTo(Math.cos(a) * 150 * pulse, Math.sin(a) * 150 * pulse);
+                slCtx.lineTo(Math.cos(a) * 250, Math.sin(a) * 250);
+                slCtx.strokeStyle = 'rgba(0, 240, 255, 0.2)'; slCtx.lineWidth = 1; slCtx.stroke();
+                slCtx.beginPath(); slCtx.arc(Math.cos(a) * 250, Math.sin(a) * 250, 4, 0, Math.PI*2);
+                slCtx.fillStyle = '#00f0ff'; slCtx.fill();
+            }
+
+            slCtx.fillStyle = '#ffffff'; slCtx.font = '700 24px Inter';
+            slCtx.textAlign = 'center'; slCtx.textBaseline = 'middle';
+            slCtx.fillText('KONTROLLÜ ERİŞİM', 0, 0);
+            slCtx.restore();
+            requestAnimationFrame(drawShield);
+        }
+
+    // ── SLIDE 9: Kapanış – dashed orbital rings ─────────────────
+    const otCanvas = getEl('outro-canvas');
+    const otCtx = otCanvas.getContext('2d');
+    let otTime = 0;
+    function initOutro() { fitCanvas(otCanvas, otCtx); }
+    function drawOutro() {
+        if (isPaused) { requestAnimationFrame(drawOutro); return; }
+        otCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        otTime += 0.004;
+        const cx = window.innerWidth * 0.5; const cy = window.innerHeight * 0.5;
+        otCtx.save(); otCtx.translate(cx, cy);
+
+        for (let r = 0; r < 6; r++) {
+            const radius = 60 + r * 55;
+            const dir = r % 2 === 0 ? 1 : -1;
+            otCtx.setLineDash([12, 22]);
+            otCtx.lineDashOffset = otTime * dir * 220;
+            otCtx.beginPath(); otCtx.arc(0, 0, radius, 0, Math.PI * 2);
+            otCtx.strokeStyle = `rgba(0, 200, 224, ${0.06 + r * 0.02})`;
+            otCtx.lineWidth = 1; otCtx.stroke();
+        }
+        otCtx.setLineDash([]);
+        otCtx.restore();
+        requestAnimationFrame(drawOutro);
+    }
+
+    // ── Init & start all loops ──────────────────────────────────
+    initIntro(); initAbout(); initHK(); initKG();
+    initBone(); initVM(); initAR(); initShield(); initOutro();
+
+    drawIntro(); drawAbout(); drawHK(); drawKG();
+    drawBone(); drawVM(); drawAR(); drawShield(); drawOutro();
+
+    goToSlide(0);
+</script>
+</body>
+</html>
