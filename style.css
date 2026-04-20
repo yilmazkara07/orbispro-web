@@ -343,11 +343,20 @@ button {
 }
 
 .hero__description {
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
-  color: rgba(255, 255, 255, 0.75);
+  font-size: clamp(1rem, 1.5vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.65);
   max-width: 600px;
   line-height: 1.8;
   margin-bottom: 2.5rem;
+}
+
+.hero__subtitle {
+  font-size: clamp(1.05rem, 1.75vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 600px;
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+  font-weight: 400;
 }
 
 .hero__actions {
@@ -454,6 +463,29 @@ button {
   letter-spacing: 0.02em;
 }
 
+/* Principle cards (about section right side) */
+.principle-card {
+  background: linear-gradient(135deg, #0B1E3F, #1A3A6C);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.principle-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.principle-card__text {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.65;
+}
+
 /* ────────────────────────────────────────────
    SOLUTIONS
 ──────────────────────────────────────────── */
@@ -551,6 +583,40 @@ button {
   font-size: 0.9rem;
   color: #6B7A8D;
   line-height: 1.75;
+}
+
+/* ────────────────────────────────────────────
+   DEFINITION
+──────────────────────────────────────────── */
+.definition__content {
+  max-width: 760px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.definition__text {
+  font-size: 1.05rem;
+  color: #4A5568;
+  line-height: 1.85;
+  margin-bottom: 1.5rem;
+}
+
+.definition__tags {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.definition__tag {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2E7FD6;
+  background-color: rgba(46, 127, 214, 0.08);
+  padding: 0.4rem 1.1rem;
+  border-radius: 100px;
+  letter-spacing: 0.01em;
 }
 
 /* ────────────────────────────────────────────
@@ -808,7 +874,6 @@ a.contact__info-value:hover {
   }
 
   .footer__inner {
-    grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 
@@ -875,6 +940,11 @@ a.contact__info-value:hover {
 
   .solutions__grid {
     grid-template-columns: 1fr;
+  }
+
+  .contact__grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .form-row {
