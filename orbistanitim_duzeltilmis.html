@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ORBİS 4.0 – Tanıtım</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        /* ── RENK DEĞİŞKENLERİ ── */
+        :root {
+            --bg-dark:      #030812;
+            --text-main:    rgba(255, 255, 255, 0.92);
+            --text-muted:   rgba(255, 255, 255, 0.52);
+            --safe-green:   #00FF88;
+            --gold-vurgu:   #E6C27A;
+            --cyan-accent:  #00C8E0;
+        }
+
+        /* ── RESET ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; overflow-x: hidden; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── SAHNE KAPSAYICI ── */
+        .scenes-wrapper {
+            position: relative;
+        }
+
+        /* ── SAHNE ── */
+        .scene {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* Her sahnede hafif arka plan efekti */
+        .scene::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(0, 200, 224, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ── METİN SARICI ── */
+        .text-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        .text-wrapper.right-align {
+            text-align: right;
+        }
+
+        /* ── SİNEMATİK METİN ── */
+        .cinematic-text {
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .cinematic-text.sub-text {
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .cinematic-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── SAHNE 7 ÖZEL STILLER ── */
+        .s7-logo {
+            font-size: clamp(60px, 10vw, 100px);
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #00C8E0 0%, #E6C27A 60%, #00FF88 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            opacity: 0;
+            transform: scale(0.85);
+            transition: opacity 1s ease, transform 1s ease;
+            margin-bottom: 24px;
+        }
+
+        .s7-logo.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .s7-badge {
+            display: inline-block;
+            padding: 12px 32px;
+            border: 1px solid var(--gold-vurgu);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--gold-vurgu);
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+            margin-top: 28px;
+            text-shadow: 0 0 20px rgba(230, 194, 122, 0.4);
+        }
+
+        .s7-badge.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── GEÇİŞ GECİKMELERİ ── */
+        .cinematic-text[id$="-t2"],
+        .cinematic-text[id$="-pre2"],
+        .cinematic-text[id$="-t-acilim"] {
+            transition-delay: 0.3s;
+        }
+
+        /* ── GERİ DÖN BUTONU ── */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(4, 9, 26, 0.85);
+            border: 1px solid rgba(0, 200, 224, 0.25);
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 0.82rem;
+            font-weight: 500;
+            font-family: inherit;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+
+        .back-btn:hover {
+            border-color: rgba(0, 200, 224, 0.6);
+            color: #fff;
+            background: rgba(4, 9, 26, 0.95);
+        }
+
+        /* ── İLERLEME ÇUBUĞU ── */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00C8E0, #E6C27A);
+            z-index: 999;
+            transition: width 0.1s ease;
+            width: 0%;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .scene {
+                padding: 80px 24px;
+                flex-direction: column;
+            }
+
+            .scene > div[style*="position: absolute"] {
+                position: relative !important;
+                left: auto !important;
+                right: auto !important;
+                top: auto !important;
+                transform: none !important;
+                max-width: 100% !important;
+                width: 100%;
+                padding: 0 16px;
+                text-align: left;
+                margin-bottom: 40px;
+            }
+
+            .cinematic-text { font-size: clamp(24px, 7vw, 44px) !important; }
+            .cinematic-text.sub-text { font-size: clamp(16px, 4vw, 24px) !important; }
+            .s7-logo { font-size: clamp(48px, 12vw, 80px) !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GERİ DÖN -->
+    <a href="index.html" class="back-btn" aria-label="Ana sayfaya dön">← Ana Sayfa</a>
+
+    <!-- İLERLEME ÇUBUĞU -->
+    <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+
+    <!-- SAHNELER -->
+    <div class="scenes-wrapper">
+
+        <!-- ═══════════════════════════════════════════
+             PARÇA 1/4 – SAHNELER 1–4
+             (İçerik bir sonraki güncellemeyle eklenecek)
+             ═══════════════════════════════════════════ -->
+
+
+        <!-- ═══════════════════════════════════════════
+             PARÇA 2/4 – SAHNELER 5–7
+             ═══════════════════════════════════════════ -->
+
+        <div class="scene" id="scene-5">
+            <div style="position: absolute; left: 8%; top: 50%; transform: translateY(-50%); max-width: 450px;">
+                <div class="text-wrapper">
+                    <div style="font-size: 26px; color: var(--text-muted); margin-bottom: 10px; text-shadow: 0 5px 15px #000;">ROL BAZLI ERİŞİM</div>
+                    <div style="font-size: 36px; font-weight: 700; color: var(--safe-green); margin-bottom: 30px; text-shadow: 0 5px 15px #000, 0 0 20px rgba(0,255,136,0.6);">AKTİF</div>
+                    <div style="font-size: 26px; color: var(--text-muted); margin-bottom: 10px; text-shadow: 0 5px 15px #000;">YETKİ MATRİSİ</div>
+                    <div style="font-size: 32px; font-weight: 700; color: var(--gold-vurgu); text-shadow: 0 5px 15px #000, 0 0 20px rgba(230,194,122,0.5);">HEKİM    SEKRETER    YÖNETİM</div>
+                </div>
+            </div>
+            <div style="position: absolute; right: 8%; top: 50%; transform: translateY(-50%); max-width: 500px;">
+                <div class="text-wrapper right-align">
+                    <div class="cinematic-text" id="s5-t1" style="font-size: 50px;">Erişim netleşir.</div>
+                    <div class="cinematic-text sub-text" id="s5-t2" style="font-size: 26px; line-height: 1.4;">Yetki karmaşası değil, kontrollü çalışma düzeni.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scene" id="scene-6">
+            <div style="position: absolute; left: 8%; top: 50%; transform: translateY(-50%); max-width: 650px;">
+                <div class="text-wrapper">
+                    <div class="cinematic-text" id="s6-t1" style="font-size: 60px; text-align: left;">ORBİS yükü azaltır.</div>
+                    <div class="cinematic-text sub-text" id="s6-t2" style="font-size: 30px; text-align: left; line-height: 1.4;">Ekip odağını ekrana değil, hastaya ve operasyona verir.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scene" id="scene-7">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="cinematic-text" id="s7-pre1" style="font-size: 44px;">Güçlü klinikler karmaşayla değil, akışla çalışır.</div>
+                <div class="cinematic-text sub-text" id="s7-pre2" style="font-size: 38px; margin-bottom: 50px;">ORBİS bunu görünür kılar.</div>
+
+                <div class="s7-logo" id="s7-t1">ORBİS 4.0</div>
+                <div class="cinematic-text sub-text" id="s7-t-acilim" style="font-size: 28px; color: var(--text-main); letter-spacing: 8px;">OPERASYONEL YÖNETİM VE KOORDİNASYON PLATFORMU</div>
+                <div class="s7-badge" id="s7-t2">KLİNİK AKIŞ. NET KONTROL. GÜÇLÜ İZ.</div>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════════
+             PARÇA 3–4/4 – KALAN SAHNELER
+             (İçerik sonraki güncellemelerle eklenecek)
+             ═══════════════════════════════════════════ -->
+
+    </div><!-- /scenes-wrapper -->
+
+    <script>
+    (function () {
+        'use strict';
+
+        var progressBar = document.getElementById('progressBar');
+
+        /* ── İlerleme çubuğu ── */
+        function updateProgress() {
+            var scrollTop  = window.scrollY || document.documentElement.scrollTop;
+            var docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+            var pct        = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = pct.toFixed(1) + '%';
+            progressBar.setAttribute('aria-valuenow', Math.round(pct));
+        }
+
+        /* ── Metin animasyonları (IntersectionObserver) ── */
+        function initAnimations() {
+            var animatedEls = document.querySelectorAll('.cinematic-text, .s7-logo, .s7-badge');
+
+            if (!('IntersectionObserver' in window)) {
+                /* Tarayıcı desteği yoksa hepsini hemen göster */
+                animatedEls.forEach(function (el) { el.classList.add('visible'); });
+                return;
+            }
+
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.25 });
+
+            animatedEls.forEach(function (el) { observer.observe(el); });
+        }
+
+        /* ── Başlat ── */
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+        initAnimations();
+
+    }());
+    </script>
+
+</body>
+</html>
