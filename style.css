@@ -1,15 +1,14 @@
 /* ============================================================
-   ORBIS Pro – style.css
-   Premium Corporate Website Stylesheet
+   ORBIS – style.css
+   Premium Clinical Operations Platform Stylesheet
    Color palette:
      --blue-dark  : #0B1E3F  (primary dark)
      --blue-mid   : #1A3A6C  (mid tone)
      --blue-accent: #2E7FD6  (CTA / accent)
      --gray-light : #F4F6F9  (section alt bg)
-     --gray-soft  : #E8ECF2  (borders / cards)
-     --gray-text  : #6B7A8D  (body text muted)
+     --gray-soft  : #E8ECF2  (borders)
+     --gray-text  : #6B7A8D  (muted body text)
      --white      : #FFFFFF
-     --dark-text  : #0B1E3F
 ============================================================ */
 
 /* ────────────────────────────────────────────
@@ -157,21 +156,6 @@ button {
   border-color: rgba(255, 255, 255, 0.7);
 }
 
-.btn--outline {
-  background-color: transparent;
-  color: #2E7FD6;
-  border: 1.5px solid #2E7FD6;
-}
-
-.btn--outline:hover {
-  background-color: #2E7FD6;
-  color: #FFFFFF;
-}
-
-.btn--full {
-  width: 100%;
-}
-
 /* ────────────────────────────────────────────
    NAVBAR
 ──────────────────────────────────────────── */
@@ -200,19 +184,24 @@ button {
 }
 
 .navbar__logo {
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
   line-height: 1;
+}
+
+.navbar__logo-icon {
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
 }
 
-.logo-orbis {
+.navbar__logo-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
   color: #FFFFFF;
-}
-
-.logo-pro {
-  color: #2E7FD6;
 }
 
 .navbar__links {
@@ -243,11 +232,13 @@ button {
   border-radius: 2px;
 }
 
-.navbar__links a:hover {
+.navbar__links a:hover,
+.navbar__links a.active {
   color: #FFFFFF;
 }
 
-.navbar__links a:hover::after {
+.navbar__links a:hover::after,
+.navbar__links a.active::after {
   width: 100%;
 }
 
@@ -295,7 +286,6 @@ button {
   overflow: hidden;
 }
 
-/* Subtle geometric pattern overlay */
 .hero::before {
   content: '';
   position: absolute;
@@ -394,76 +384,127 @@ button {
 }
 
 /* ────────────────────────────────────────────
-   ABOUT
+   ORBIS NEDİR?
 ──────────────────────────────────────────── */
-.about__grid {
+.nedir__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  align-items: center;
+  align-items: start;
 }
 
-.about__text p {
+.nedir__text p {
   color: #4A5568;
   margin-bottom: 1.25rem;
   font-size: 1rem;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
-.about__text strong {
-  color: #0B1E3F;
-  font-weight: 700;
-}
-
-.about__text .btn {
-  margin-top: 0.5rem;
-}
-
-.about__stats {
+.nedir__pillars {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
-.stat-card {
-  background: linear-gradient(135deg, #0B1E3F, #1A3A6C);
-  border-radius: 16px;
-  padding: 1.75rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+.pillar {
+  background: #F4F6F9;
+  border: 1px solid #E8ECF2;
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.stat-card__number {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #FFFFFF;
-  line-height: 1;
-  letter-spacing: -0.02em;
+.pillar:hover {
+  box-shadow: 0 8px 28px rgba(11, 30, 63, 0.08);
+  border-color: rgba(46, 127, 214, 0.2);
 }
 
-.stat-card__plus {
-  font-size: 1.4rem;
+.pillar__icon {
+  width: 32px;
+  height: 32px;
   color: #2E7FD6;
+  margin-bottom: 0.9rem;
 }
 
-.stat-card__label {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.65);
-  letter-spacing: 0.02em;
+.pillar h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0B1E3F;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+
+.pillar p {
+  font-size: 0.85rem;
+  color: #6B7A8D;
+  line-height: 1.65;
 }
 
 /* ────────────────────────────────────────────
-   SOLUTIONS
+   NEDEN GELİŞTİRİLDİ?
 ──────────────────────────────────────────── */
-.solutions__grid {
+.neden__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid #E8ECF2;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.neden__item {
+  display: flex;
+  gap: 1.25rem;
+  padding: 2rem 2rem 2rem 1.75rem;
+  border-bottom: 1px solid #E8ECF2;
+  border-right: 1px solid #E8ECF2;
+  transition: background-color 0.2s ease;
+}
+
+.neden__item:hover {
+  background-color: #FAFBFC;
+}
+
+.neden__item:nth-child(even) {
+  border-right: none;
+}
+
+.neden__item:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+.neden__item-marker {
+  flex-shrink: 0;
+  margin-top: 0.45rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2E7FD6;
+}
+
+.neden__item h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0B1E3F;
+  margin-bottom: 0.5rem;
+}
+
+.neden__item p {
+  font-size: 0.9rem;
+  color: #6B7A8D;
+  line-height: 1.75;
+}
+
+/* ────────────────────────────────────────────
+   TEMEL YAPISI – MODÜLLER
+──────────────────────────────────────────── */
+.yapi__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
-.solution-card {
+.modul-card {
   background: #FFFFFF;
   border: 1px solid #E8ECF2;
   border-radius: 16px;
@@ -471,20 +512,20 @@ button {
   transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
 }
 
-.solution-card:hover {
+.modul-card:hover {
   box-shadow: 0 12px 40px rgba(11, 30, 63, 0.1);
   transform: translateY(-4px);
   border-color: rgba(46, 127, 214, 0.25);
 }
 
-.solution-card__icon {
+.modul-card__icon {
   width: 48px;
   height: 48px;
   color: #2E7FD6;
   margin-bottom: 1.25rem;
 }
 
-.solution-card__title {
+.modul-card__title {
   font-size: 1.05rem;
   font-weight: 700;
   color: #0B1E3F;
@@ -492,217 +533,213 @@ button {
   line-height: 1.3;
 }
 
-.solution-card__desc {
-  font-size: 0.9rem;
+.modul-card__desc {
+  font-size: 0.875rem;
   color: #6B7A8D;
-  line-height: 1.75;
+  line-height: 1.8;
 }
 
 /* ────────────────────────────────────────────
-   ADVANTAGES
+   ÇALIŞMA YAKLAŞIMI
 ──────────────────────────────────────────── */
-.advantages__list {
+.yaklasim__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
+  max-width: 1000px;
+  margin-inline: auto;
 }
 
-.advantage-item {
+.yaklasim__item {
   display: flex;
   gap: 1.5rem;
-  padding: 2rem;
+  padding: 2.25rem 2rem;
   border-bottom: 1px solid #E8ECF2;
   border-right: 1px solid #E8ECF2;
   transition: background-color 0.2s ease;
 }
 
-.advantage-item:hover {
-  background-color: #F8FAFC;
+.yaklasim__item:hover {
+  background-color: #FAFBFC;
 }
 
-/* Remove right border on second column */
-.advantage-item:nth-child(even) {
+/* Last item spans 2 columns if odd */
+.yaklasim__item:nth-child(even) {
   border-right: none;
 }
 
-/* Remove bottom border on last row (items 5 and 6 in a 2-col, 6-item grid) */
-.advantage-item:nth-last-child(-n+2) {
+/* last 2 items have no border-bottom */
+.yaklasim__item:nth-last-child(-n+2) {
   border-bottom: none;
 }
 
-.advantage-item__number {
-  font-size: 2.5rem;
+/* 5th item: last row, first col — odd, so still has right border; spans naturally */
+.yaklasim__item:last-child {
+  grid-column: 1 / -1;
+  border-right: none;
+  border-bottom: none;
+}
+
+.yaklasim__num {
+  font-size: 2.2rem;
   font-weight: 800;
   color: rgba(46, 127, 214, 0.15);
   line-height: 1;
   flex-shrink: 0;
-  min-width: 3rem;
+  min-width: 2.8rem;
   letter-spacing: -0.03em;
 }
 
-.advantage-item__body h3 {
+.yaklasim__body h3 {
   font-size: 1rem;
   font-weight: 700;
   color: #0B1E3F;
   margin-bottom: 0.5rem;
 }
 
-.advantage-item__body p {
+.yaklasim__body p {
   font-size: 0.9rem;
+  color: #6B7A8D;
+  line-height: 1.8;
+}
+
+/* ────────────────────────────────────────────
+   KİMLER İÇİN UYGUN?
+──────────────────────────────────────────── */
+.kimler__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.kimler__card {
+  background: linear-gradient(135deg, #0B1E3F, #1A3A6C);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kimler__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(11, 30, 63, 0.22);
+}
+
+.kimler__card-icon {
+  width: 40px;
+  height: 40px;
+  color: #2E7FD6;
+  margin-bottom: 1.1rem;
+}
+
+.kimler__card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.65rem;
+  line-height: 1.4;
+}
+
+.kimler__card p {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.8;
+}
+
+/* ────────────────────────────────────────────
+   TASARIM VE MANTIK İLKELERİ
+──────────────────────────────────────────── */
+.ilkeler__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.ilke {
+  padding: 1.75rem;
+  border-left: 3px solid #2E7FD6;
+  background: #FFFFFF;
+  border-radius: 0 12px 12px 0;
+  transition: box-shadow 0.2s ease;
+}
+
+.ilke:hover {
+  box-shadow: 0 6px 24px rgba(11, 30, 63, 0.08);
+}
+
+.ilke__label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0B1E3F;
+  margin-bottom: 0.7rem;
+  letter-spacing: -0.01em;
+}
+
+.ilke__text {
+  font-size: 0.875rem;
   color: #6B7A8D;
   line-height: 1.75;
 }
 
 /* ────────────────────────────────────────────
-   CONTACT
+   İLETİŞİM
 ──────────────────────────────────────────── */
-.contact__grid {
+.iletisim__cards {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 4rem;
-  align-items: start;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 900px;
+  margin-inline: auto;
 }
 
-.contact__info {
+.iletisim__card {
+  background: #FFFFFF;
+  border: 1px solid #E8ECF2;
+  border-radius: 16px;
+  padding: 2.25rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
 }
 
-.contact__info-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+.iletisim__card:hover {
+  box-shadow: 0 10px 36px rgba(11, 30, 63, 0.1);
+  transform: translateY(-3px);
+  border-color: rgba(46, 127, 214, 0.2);
 }
 
-.contact__info-icon {
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  background-color: rgba(46, 127, 214, 0.1);
-  border-radius: 10px;
+.iletisim__card-icon {
+  width: 44px;
+  height: 44px;
+  color: #2E7FD6;
+  background-color: rgba(46, 127, 214, 0.08);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2E7FD6;
-  padding: 8px;
+  padding: 10px;
 }
 
-.contact__info-label {
+.iletisim__card-label {
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #6B7A8D;
-  margin-bottom: 0.25rem;
 }
 
-.contact__info-value {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #0B1E3F;
-  transition: color 0.2s ease;
-}
-
-a.contact__info-value:hover {
-  color: #2E7FD6;
-}
-
-/* Contact Form */
-.contact__form {
-  background: #FFFFFF;
-  border: 1px solid #E8ECF2;
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow: 0 4px 24px rgba(11, 30, 63, 0.06);
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-bottom: 1.25rem;
-}
-
-.form-group:last-of-type {
-  margin-bottom: 0;
-}
-
-.form-group label {
-  font-size: 0.85rem;
+.iletisim__card-value {
+  font-size: 1rem;
   font-weight: 600;
   color: #0B1E3F;
+  transition: color 0.2s ease;
+  line-height: 1.4;
 }
 
-.form-group label span {
+a.iletisim__card-value:hover {
   color: #2E7FD6;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1.5px solid #E8ECF2;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.9rem;
-  color: #0B1E3F;
-  background-color: #FAFBFD;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  outline: none;
-  appearance: none;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: #B0BCC9;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-color: #2E7FD6;
-  box-shadow: 0 0 0 3px rgba(46, 127, 214, 0.12);
-  background-color: #FFFFFF;
-}
-
-.form-group select {
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7A8D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.85rem center;
-  padding-right: 2.5rem;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.contact__form .btn {
-  margin-top: 1.5rem;
-}
-
-.form__note {
-  font-size: 0.85rem;
-  margin-top: 0.75rem;
-  text-align: center;
-  min-height: 1.2em;
-}
-
-.form__note--success {
-  color: #1A8C4E;
-}
-
-.form__note--error {
-  color: #C0392B;
 }
 
 /* ────────────────────────────────────────────
@@ -715,21 +752,57 @@ a.contact__info-value:hover {
 
 .footer__inner {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 3rem;
   padding-block: 4rem;
+}
+
+.footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.footer__logo-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.footer__logo-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
 }
 
 .footer__tagline {
   font-size: 0.9rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.55);
-  margin-top: 0.85rem;
-  max-width: 280px;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 360px;
+  margin-bottom: 1.25rem;
 }
 
-.footer__links h4,
-.footer__contact h4 {
+.footer__contact-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer__contact-inline a,
+.footer__contact-inline span {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.2s ease;
+}
+
+.footer__contact-inline a:hover {
+  color: #FFFFFF;
+}
+
+.footer__links h4 {
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -738,23 +811,19 @@ a.contact__info-value:hover {
   margin-bottom: 1.25rem;
 }
 
-.footer__links ul,
-.footer__contact ul {
+.footer__links ul {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
-.footer__links a,
-.footer__contact a,
-.footer__contact li {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.65);
+.footer__links a {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
   transition: color 0.2s ease;
 }
 
-.footer__links a:hover,
-.footer__contact a:hover {
+.footer__links a:hover {
   color: #FFFFFF;
 }
 
@@ -766,54 +835,65 @@ a.contact__info-value:hover {
 .footer__bottom .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .footer__bottom p {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
 }
 
 /* ────────────────────────────────────────────
    RESPONSIVE – TABLET (≤ 900px)
 ──────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .about__grid {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  .solutions__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .advantages__list {
-    grid-template-columns: 1fr;
-  }
-
-  .advantage-item {
-    border-right: none;
-    border-bottom: 1px solid #E8ECF2;
-  }
-
-  .advantage-item:last-child {
-    border-bottom: none;
-  }
-
-  .contact__grid {
+  .nedir__grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
 
-  .footer__inner {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+  .neden__grid {
+    grid-template-columns: 1fr;
   }
 
-  .footer__brand {
-    grid-column: 1 / -1;
+  .neden__item {
+    border-right: none;
+    border-bottom: 1px solid #E8ECF2;
+  }
+
+  .neden__item:last-child {
+    border-bottom: none;
+  }
+
+  .yapi__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .yaklasim__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .yaklasim__item {
+    border-right: none;
+    border-bottom: 1px solid #E8ECF2;
+  }
+
+  .yaklasim__item:last-child {
+    grid-column: auto;
+    border-bottom: none;
+  }
+
+  .ilkeler__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .iletisim__cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 }
 
@@ -869,34 +949,31 @@ a.contact__info-value:hover {
     justify-content: center;
   }
 
-  .about__stats {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .solutions__grid {
+  .nedir__pillars {
     grid-template-columns: 1fr;
   }
 
-  .form-row {
+  .yapi__grid {
     grid-template-columns: 1fr;
   }
 
-  .contact__form {
-    padding: 1.5rem;
+  .kimler__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ilkeler__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .iletisim__cards {
+    grid-template-columns: 1fr;
   }
 
   .footer__inner {
-    grid-template-columns: 1fr;
-    gap: 2rem;
     padding-block: 3rem;
   }
 
-  .footer__brand {
-    grid-column: auto;
-  }
-
   .footer__bottom .container {
-    flex-direction: column;
     text-align: center;
   }
 }
