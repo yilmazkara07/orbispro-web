@@ -1,17 +1,19 @@
 /* ============================================================
    ORBIS – script.js
    Vanilla JavaScript: mobile nav, navbar scroll state,
-   smooth scroll, footer year.
+   active link highlight, contact form feedback, footer year.
 ============================================================ */
 
 (function () {
   'use strict';
 
   /* ── DOM references ─────────────────────────────── */
-  const navbar    = document.getElementById('navbar');
-  const hamburger = document.getElementById('hamburger');
-  const navLinks  = document.getElementById('navLinks');
-  const yearSpan  = document.getElementById('year');
+  const navbar      = document.getElementById('navbar');
+  const hamburger   = document.getElementById('hamburger');
+  const navLinks    = document.getElementById('navLinks');
+  const contactForm = document.getElementById('contactForm');
+  const formMessage = document.getElementById('formMessage');
+  const yearSpan    = document.getElementById('year');
 
   /* ── Footer year ────────────────────────────────── */
   if (yearSpan) {
@@ -28,7 +30,7 @@
   }
 
   window.addEventListener('scroll', handleNavbarScroll, { passive: true });
-  handleNavbarScroll(); // run once on load
+  handleNavbarScroll();
 
   /* ── Mobile nav: hamburger toggle ──────────────── */
   function openNav() {
@@ -52,14 +54,12 @@
     });
   }
 
-  /* Close nav when a link is clicked */
   if (navLinks) {
     navLinks.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', closeNav);
     });
   }
 
-  /* Close nav when clicking outside */
   document.addEventListener('click', function (event) {
     if (
       navLinks &&
@@ -71,7 +71,6 @@
     }
   });
 
-  /* Close nav on Escape key */
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && navLinks && navLinks.classList.contains('open')) {
       closeNav();
@@ -103,5 +102,44 @@
 
   window.addEventListener('scroll', updateActiveLink, { passive: true });
   updateActiveLink();
+
+  /* ── Contact form: validation & feedback ────────── */
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const fullName = contactForm.fullName.value.trim();
+      const email    = contactForm.email.value.trim();
+      const subject  = contactForm.subject.value;
+      const message  = contactForm.message.value.trim();
+
+      if (!fullName || !email || !subject || !message) {
+        showFormMessage('Lütfen zorunlu alanları doldurun.', 'error');
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        showFormMessage('Lütfen geçerli bir e-posta adresi girin.', 'error');
+        return;
+      }
+
+      showFormMessage('Mesajınız alındı.', 'success');
+      contactForm.reset();
+    });
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function showFormMessage(text, type) {
+    if (!formMessage) return;
+    formMessage.textContent = text;
+    formMessage.className = 'form__note form__note--' + type;
+    setTimeout(function () {
+      formMessage.textContent = '';
+      formMessage.className = 'form__note';
+    }, 6000);
+  }
 
 }());
